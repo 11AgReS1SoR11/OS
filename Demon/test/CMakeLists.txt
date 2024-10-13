@@ -13,7 +13,7 @@ FetchContent_MakeAvailable(Catch2)
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../src)
 
-set(SRC_LIST_TESTS ut.cpp)
+set(SRC_LIST_TESTS ut.cpp ${SOURCE_DIR}/Reader.cpp)
 
 add_executable(test ${SRC_LIST_TESTS})
 

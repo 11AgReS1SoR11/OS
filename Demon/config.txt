@@ -1,0 +1,3 @@
+/home/user/documents
+/home/user/downloads
+5
