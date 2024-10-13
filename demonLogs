@@ -1,0 +1,4 @@
+#!/bin/bash
+DEMON_NAME="Demon"
+echo "Displaying logs for daemon: $DEMON_NAME"
+journalctl -t "$DEMON_NAME" -n 100 --no-pager
