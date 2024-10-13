@@ -3,7 +3,7 @@
 #include <expected>
 #include <string>
 
-inline std::string const CONFIG_PATH{"/home/daniil/Desktop/Daniil/OS/Demon/config.txt"}; // "../../Demon/config.txt";
+inline std::string const CONFIG_PATH{"Demon/config.txt"};
 
 class Reader
 {

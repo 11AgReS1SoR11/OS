@@ -22,7 +22,7 @@ Demon& Demon::getInstance()
 
 Demon::Demon() : m_reader(Reader::getInstance()), m_logger(Logger::getInstance()) {}
 
-Demon::~Demon() { /*shutDown();*/ }
+Demon::~Demon() { shutDown(); }
 
 void Demon::start()
 {
@@ -33,70 +33,38 @@ void Demon::start()
         exit(EXIT_FAILURE);
     }
 
-    Logger::getInstance().logInfo("Demon not isAlreadyRunning.");
-
     if (auto result = m_reader.readConfig(); !result)
     {
         m_logger.logError(result.error());
         exit(EXIT_FAILURE);
     }
 
-    Logger::getInstance().logInfo("Demon reads config successful.");
-
     demonize();
-    Logger::getInstance().logInfo("Demon demonize successful.");
     handleSignals();
-    Logger::getInstance().logInfo("Demon handleSignals successful.");
     run();
 }
 
 void Demon::demonize()
 {
     pid_t pid = fork();
-    if (pid < 0)
-    {
-        Logger::getInstance().logInfo("Demon has PID < 0.");
-        exit(EXIT_FAILURE);
-    }
-    if (pid > 0)
-    {
-        Logger::getInstance().logInfo("Demon has PID > 0.");
-        exit(EXIT_SUCCESS);
-    }
+    if (pid < 0) exit(EXIT_FAILURE);
+    if (pid > 0) exit(EXIT_SUCCESS);
 
-    if (setsid() < 0)
-    {
-        Logger::getInstance().logInfo("Demon setsid fail.");
-        exit(EXIT_FAILURE);
-    }
+    if (setsid() < 0) exit(EXIT_FAILURE);
 
     signal(SIGHUP, SIG_IGN);
     pid = fork();
-    if (pid < 0)
-    {
-        Logger::getInstance().logInfo("Demon has PID < 0. [2]");
-        exit(EXIT_FAILURE);
-    }
-    if (pid > 0)
-    {
-        Logger::getInstance().logInfo("Demon has PID > 0.");
-        exit(EXIT_SUCCESS);
-    }
+    if (pid < 0) exit(EXIT_FAILURE);
+    if (pid > 0) exit(EXIT_SUCCESS);
 
     umask(0);
     chdir("/");
-
-    Logger::getInstance().logInfo("Demon umask(0) and chdir() success.");
 
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
 
-    Logger::getInstance().logInfo("Demon close descryptors success.");
-
     m_logger.openLog("Demon");
-
-    Logger::getInstance().logInfo("Demon open log success.");
 
     if (std::ofstream pidFile(PID_FILE); pidFile)
     {
@@ -104,12 +72,9 @@ void Demon::demonize()
     }
     else
     {
-        Logger::getInstance().logInfo("Failed to create PID file.");
         m_logger.logError("Failed to create PID file.");
         exit(EXIT_FAILURE);
     }
-
-    Logger::getInstance().logInfo("Demon demonize success.");
 }
 
 bool Demon::isAlreadyRunning() const
@@ -133,7 +98,7 @@ void Demon::handleSignals()
     signal(SIGTERM, sigtermHandler);
 }
 
-void Demon::sighupHandler(int signum)
+void Demon::sighupHandler(int)
 {
     Logger::getInstance().logInfo("SIGHUP received, re-reading config.");
     if (auto result = Reader::getInstance().readConfig(); !result)
@@ -151,7 +116,7 @@ void Demon::shutDown()
     exit(0);
 }
 
-void Demon::sigtermHandler(int signum)
+void Demon::sigtermHandler(int)
 {
     Logger::getInstance().logInfo("SIGTERM received, terminating.");
     shutDown();
@@ -161,9 +126,7 @@ void Demon::run()
 {
     while (true)
     {
-        Logger::getInstance().logInfo("Demon monitoring.");
         monitor(m_reader.getDir1(), m_reader.getDir2() + HIST_FILE);
-        Logger::getInstance().logInfo("Demon monitoring successful.");
         sleep(m_reader.getInterval());
     }
 }
