@@ -1,3 +1,3 @@
-/home/user/documents
-/home/user/downloads
-5
+/home/daniil/Desktop/test1
+/home/daniil/Desktop/test2
+30

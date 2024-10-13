@@ -7,10 +7,10 @@ class Logger
 public:
     static Logger& getInstance();
 
-    void openLog(std::string const& identifier);
-    void logInfo(std::string const& message);
-    void logError(std::string const& message);
-    void closeLog();
+    void openLog(std::string const& identifier) const;
+    void logInfo(std::string const& message) const;
+    void logError(std::string const& message) const;
+    void closeLog() const;
 
 private:
     Logger();
