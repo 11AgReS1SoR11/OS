@@ -1,4 +1,4 @@
 #!/bin/bash
 DEMON_NAME="Demon"
-echo "Displaying logs for daemon: $DEMON_NAME"
-journalctl -t "$DEMON_NAME" -n 100 --no-pager
+echo "Просмотр логов демона $DEMON_NAME:"
+grep $DEMON_NAME /var/log/syslog | tail -n 100

@@ -17,19 +17,16 @@ public:
 
 private:
     Demon();
-    ~Demon();
     Demon(Demon const&) = delete;
     Demon& operator=(Demon const&) = delete;
 
     void demonize();
     void handleSignals();
-    void signalHandler(int signal);
 
     void run();
 
     static void sighupHandler(int signum);
     static void sigtermHandler(int signum);
-    static void shutDown();
 
     Reader& m_reader;
     Logger& m_logger;
