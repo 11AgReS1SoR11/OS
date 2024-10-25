@@ -1,0 +1,4 @@
+#!/bin/bash
+DEMON_NAME="Demon"
+echo "Просмотр логов демона $DEMON_NAME:"
+grep $DEMON_NAME /var/log/syslog | tail -n 100

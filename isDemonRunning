@@ -1,0 +1,12 @@
+#!/bin/bash
+PID_FILE="/var/run/Demon.pid"
+if [ -f "$PID_FILE" ]; then
+    PID=$(cat "$PID_FILE")
+    if ps -p $PID > /dev/null 2>&1; then
+        echo "Daemon is running (PID: $PID)"
+    else
+        echo "Daemon is not running, but PID file exists."
+    fi
+else
+    echo "Daemon is not running (no PID file)."
+fi
